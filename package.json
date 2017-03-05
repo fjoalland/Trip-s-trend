@@ -1,22 +1,17 @@
 {
   "name": "take-your-best-flight-s-time",
-  "version": "1.0.0",
-  "description": "",
-  "main": "app.js",
+  "version": "0.0.0",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node ./bin/www"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/fjoalland/take-your-best-flight-s-time.git"
-  },
-  "author": "fjoalland",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/fjoalland/take-your-best-flight-s-time/issues"
-  },
-  "homepage": "https://github.com/fjoalland/take-your-best-flight-s-time#readme",
   "dependencies": {
-    "qpx-express": "^16.1.12"
+    "body-parser": "~1.15.2",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.2.0",
+    "express": "~4.14.0",
+    "jade": "~1.11.0",
+    "morgan": "~1.7.0",
+    "serve-favicon": "~2.3.0"
   }
 }
