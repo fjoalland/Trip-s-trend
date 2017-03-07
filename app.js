@@ -1,46 +1,65 @@
 var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-
-var index = require('./routes/index');
-var users = require('./routes/users');
-
+//var router = express.Router();
+var API = require('qpx-express');
+var TripDao = require(__dirname + '/dal/tripDao');
+var tripDao = new TripDao();
 var app = express();
- 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
 
-// uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', index);
-app.use('/users', users);
+//router.get('/', function(req, res, next) {
+ setInterval(function () { 	
+	console.log("Add data trip");
+	var apiKey = 'AIzaSyCE5d9lPe8uL99DDI71RIdHD8B5W7BDMd4';
+	var qpx = new API(apiKey);
+	var date = "2017-04-27";
+	
+	var body ={
+	  "request": {
+	    "slice": [
+	      {
+	        "origin": "CDG",
+	        "destination": "ICN",
+	        "date": date
+	      }
+	    ],
+	    "passengers": {
+	      "adultCount": 1,
+	      "infantInLapCount": 0,
+	      "infantInSeatCount": 0,
+	      "childCount": 0,
+	      "seniorCount": 0
+	    },
+	    "solutions": 30,
+	    "refundable": false
+	  }
+	}
+	;
 
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
-});
 
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+	 
+	qpx.getInfo(body, function(error, data){
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
-});
+		console.log("Json flight ticket.");
+		
+		for(var i= 0; i < data.trips.tripOption.length; i++)
+		{
+			console.log(data.trips.tripOption[i]);
+			tripDao.createTrip(data.trips.tripOption[i], date, function(err, result){
+				console.log(result);
+			});
+		}
+		
+		//var json = JSON.stringify({ 
+		//	response: data.trips.tripOption
+		//});
+		
+		//res.writeHead(200, {"Content-Type": "application/json"});
+		//res.end(json);
 
+	});
+	
+setTimeout}, 10000); 
+
+//});
 module.exports = app;
+
